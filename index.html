@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>A/B Testing Simulator</title>
+    <link rel="preconnect" href="https://fonts.googleapis.com" />
+    <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin />
+    <link
+      href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&display=swap"
+      rel="stylesheet"
+    />
+    <link rel="stylesheet" href="styles.css" />
+  </head>
+  <body>
+    <div class="page-shell">
+      <header class="hero">
+        <div>
+          <span class="eyebrow">E-commerce experimentation workspace</span>
+          <h1>A/B Testing Simulator</h1>
+          <p class="hero-copy">
+            Design experiments, choose the right metric, estimate sample size, and check observed results
+            with a clean simulator built for e-commerce teams.
+          </p>
+        </div>
+        <div class="hero-badges">
+          <span class="badge">Primary metric selection</span>
+          <span class="badge">Guardrail recommendations</span>
+          <span class="badge">Sample size and duration</span>
+          <span class="badge">Result significance checker</span>
+        </div>
+      </header>
+
+      <main class="grid-layout">
+        <section class="panel panel-large">
+          <div class="panel-header">
+            <div>
+              <p class="section-kicker">Step 1</p>
+              <h2>Choose your primary metric</h2>
+            </div>
+            <button id="loadDefaultsBtn" class="secondary-btn">Load recommended defaults</button>
+          </div>
+          <p class="section-copy">
+            Pick the metric that best reflects the business objective of the experiment. The simulator will
+            preload industry-relevant assumptions that you can edit.
+          </p>
+          <div id="metricGrid" class="metric-grid"></div>
+        </section>
+
+        <section class="panel">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Metric brief</p>
+              <h2 id="selectedMetricTitle">Conversion Rate</h2>
+            </div>
+          </div>
+          <div id="metricDetail" class="metric-detail"></div>
+        </section>
+
+        <section class="panel panel-large">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Step 2</p>
+              <h2>Experiment design inputs</h2>
+            </div>
+          </div>
+          <div class="form-grid">
+            <label>
+              <span>Baseline</span>
+              <div class="input-with-suffix">
+                <input id="baselineInput" type="number" step="0.01" />
+                <span id="baselineSuffix" class="input-suffix">%</span>
+              </div>
+            </label>
+            <label>
+              <span>Expected uplift or MDE</span>
+              <div class="input-with-suffix">
+                <input id="upliftInput" type="number" step="0.1" value="5" />
+                <span class="input-suffix">%</span>
+              </div>
+            </label>
+            <label>
+              <span>Alpha</span>
+              <select id="alphaInput">
+                <option value="0.1">0.10</option>
+                <option value="0.05" selected>0.05</option>
+                <option value="0.01">0.01</option>
+              </select>
+            </label>
+            <label>
+              <span>Power</span>
+              <select id="powerInput">
+                <option value="0.8" selected>0.80</option>
+                <option value="0.85">0.85</option>
+                <option value="0.9">0.90</option>
+              </select>
+            </label>
+            <label>
+              <span>Daily eligible traffic</span>
+              <input id="trafficInput" type="number" step="1" value="25000" />
+            </label>
+            <label>
+              <span>Treatment allocation</span>
+              <div class="input-with-suffix">
+                <input id="allocationInput" type="number" min="1" max="99" step="1" value="50" />
+                <span class="input-suffix">%</span>
+              </div>
+            </label>
+            <label id="stdDevLabel">
+              <span id="stdDevLabelText">Standard deviation</span>
+              <div class="input-with-suffix">
+                <input id="stdDevInput" type="number" step="0.01" />
+                <span id="stdDevSuffix" class="input-suffix">units</span>
+              </div>
+            </label>
+          </div>
+
+          <div class="guardrails-wrap">
+            <div>
+              <p class="mini-label">Recommended guardrails</p>
+              <p class="muted-text">Select the guardrails you want the team to monitor during the test.</p>
+            </div>
+            <div id="guardrailList" class="guardrail-list"></div>
+          </div>
+
+          <div class="actions-row">
+            <button id="calculateBtn" class="primary-btn">Calculate test plan</button>
+            <button id="resetBtn" class="secondary-btn">Reset inputs</button>
+          </div>
+        </section>
+
+        <section class="panel panel-large">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Step 3</p>
+              <h2>Design recommendation</h2>
+            </div>
+          </div>
+          <div id="resultsGrid" class="results-grid"></div>
+          <div id="analysisNote" class="analysis-note"></div>
+        </section>
+
+        <section class="panel panel-large">
+          <div class="panel-header compact">
+            <div>
+              <p class="section-kicker">Step 4</p>
+              <h2>Observed result checker</h2>
+            </div>
+          </div>
+          <p class="section-copy">
+            Enter actual results from your control and treatment groups to estimate lift, test statistic,
+            p-value, and whether the result clears the selected significance threshold.
+          </p>
+
+          <div class="form-grid">
+            <label>
+              <span>Control users</span>
+              <input id="controlUsersInput" type="number" step="1" value="50000" />
+            </label>
+            <label>
+              <span>Treatment users</span>
+              <input id="treatmentUsersInput" type="number" step="1" value="50000" />
+            </label>
+            <label>
+              <span id="controlMetricLabel">Control conversions</span>
+              <input id="controlMetricInput" type="number" step="0.01" value="1400" />
+            </label>
+            <label>
+              <span id="treatmentMetricLabel">Treatment conversions</span>
+              <input id="treatmentMetricInput" type="number" step="0.01" value="1498" />
+            </label>
+            <label id="controlStdDevLabel" class="conditional-field">
+              <span>Control standard deviation</span>
+              <input id="controlStdDevInput" type="number" step="0.01" value="450" />
+            </label>
+            <label id="treatmentStdDevLabel" class="conditional-field">
+              <span>Treatment standard deviation</span>
+              <input id="treatmentStdDevInput" type="number" step="0.01" value="450" />
+            </label>
+          </div>
+
+          <div class="actions-row">
+            <button id="runObservedBtn" class="primary-btn">Check observed results</button>
+          </div>
+
+          <div id="observedResults" class="observed-results"></div>
+        </section>
+      </main>
+    </div>
+
+    <script src="script.js"></script>
+  </body>
+</html>

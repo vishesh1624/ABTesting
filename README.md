@@ -4,8 +4,7 @@ A simple web-based simulator to help e-commerce teams plan, size, and review A/B
 
 ## Live Demo
 
-Access the simulator here:
-**[Add your hosted link here]**
+https://ab-testing-omega.vercel.app/
 
 ## What this tool helps you do
 
